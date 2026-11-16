@@ -11,7 +11,7 @@ EVENTS=$(journalctl --since "$WINDOW ago" \
   grep -i "authentication failure" || true)
 
 COUNT=$(printf '%s\n' "$EVENTS" |
-  grep -c "authentication failure")
+  grep -ic "authentication failure")
 
 SCAN_TIME=$(date '+%Y-%m-%d %H:%M:%S %Z')
 
