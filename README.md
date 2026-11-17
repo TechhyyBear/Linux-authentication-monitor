@@ -43,35 +43,45 @@ These thresholds are instructional examples, not production-validated detection 
 
 ## Testing and Validation
 
-**Test 1 — Normal activity**
+**Test 1 — Normal activity (Version 2)**
 
-Executed the monitoring script when no matching authentication failures were present within the monitoring window.
+Executed the updated monitoring script when no matching authentication failures were present within the five-minute monitoring window.
 
-**Result:** OK.
+**Result:** PASS — Zero failures detected; status classified as OK.
 
-**Test 2 — Controlled authentication failure**
+**Test 2 — Controlled authentication failure (Version 2)**
 
-Intentionally generated one unsuccessful sudo authentication attempt and verified that the monitoring script identified the corresponding event.
+Generated one unsuccessful sudo authentication attempt in the isolated Kali Linux environment. Executed the monitoring script and examined the resulting report.
 
-**Result:** NOTICE.
+**Result:** PASS — One authentication failure detected; status classified as NOTICE. The report displayed the corresponding authentication failure event.
 
-**Test 3 — Alert threshold**
+**Test 3 — ALERT classification logic (Version 2)**
 
-Simulated a detection count of three to verify that the alert classification executed correctly in Version 1.
+Executed the Version 2 classification logic separately with a simulated failure count of three.
 
-**Result:** ALERT.
+**Result:** PASS — The logic correctly returned ALERT.
 
-**Test 4 — Event evidence**
+**Validation limitation:** This test exercised the classification logic independently. The complete Version 2 script has not yet been tested against three matching journal events.
 
-Verified that the monitoring report displayed an authentication failure message with an event timestamp.
+**Test 4 — Case-insensitive event counting**
 
-**Result:** Successful.
+Tested the corrected counting command against three sample authentication failure messages using lowercase, mixed-case, and uppercase text.
 
-**Test 5 — Structured reporting**
+**Result:** PASS — All three messages were counted successfully.
 
-Developed Version 2 to display scan time, monitoring window, failure count, classification, and event evidence.
+**Test 5 — Bash syntax validation**
 
-**Result:** Successfully tested with a controlled authentication failure.
+Executed `bash -n` against the updated Version 2 script.
+
+**Result:** PASS — No syntax errors reported.
+
+**Test 6 — Structured reporting (Version 2)**
+
+Executed the complete monitoring script and verified the reported failure count, classification, and authentication event evidence during controlled testing.
+
+**Result:** PASS — The script generated the expected monitoring report.
+
+**Testing scope:** All testing was performed in an isolated training environment. Detection thresholds are instructional and have not been validated against production security events.
 
 ## Project Files
 
