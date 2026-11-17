@@ -94,7 +94,7 @@ Executed the complete monitoring script and verified the reported failure count,
 - Detection relies on a specific authentication failure phrase.
 - The monitoring window is limited to five minutes.
 - Detection thresholds have not been validated against real-world attack patterns.
-- The Version 2 ALERT condition has not been independently tested.
+- The Version 2 ALERT classification logic passed a standalone test, but the complete script has not been validated against three matching journal events.
 - The tool does not provide centralized SIEM capabilities.
 
 ## Future Improvements
