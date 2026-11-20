@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 # Linux Authentication Monitor - Version 2
