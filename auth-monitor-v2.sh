@@ -5,8 +5,21 @@
 
 WINDOW="5 minutes"
 
-EVENTS=$(journalctl --since "$WINDOW ago" \
-  --no-pager -o short-iso |
+# Read the journal before filtering so a failed read cannot be mistaken for zero events.
+if ! JOURNAL=$(journalctl --since "$WINDOW ago" \
+  --no-pager -o short-iso); then
+    echo "=================================="
+    echo " LINUX AUTHENTICATION MONITOR"
+    echo "=================================="
+    echo "Failures Detected: UNKNOWN"
+    echo "Status: ERROR"
+    echo "EVENT EVIDENCE"
+    echo "Unavailable: journalctl failed."
+    echo "=================================="
+    exit 1
+fi
+
+EVENTS=$(printf '%s\n' "$JOURNAL" |
   grep -i "authentication failure" || true)
 
 COUNT=$(printf '%s\n' "$EVENTS" |
