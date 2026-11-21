@@ -36,8 +36,9 @@ Demonstrate foundational security operations capabilities by:
 | Zero authentication failures | OK |
 | One or two authentication failures | NOTICE |
 | Three or more authentication failures | ALERT |
+| `journalctl` read fails | ERROR (exit code 1) |
 
-The script examines recent journal entries containing the phrase `authentication failure`.
+The script examines recent journal entries containing the phrase `authentication failure`. An unsuccessful `journalctl` read is reported as `Status: ERROR` with `Failures Detected: UNKNOWN` and a nonzero exit code, rather than incorrectly reporting `OK`.
 
 These thresholds are instructional examples, not production-validated detection rules.
 
@@ -87,6 +88,10 @@ Generated three synthetic `authentication failure` messages using `logger` in th
 
 **Result:** PASS — Script reported `Failures Detected: 4`, classified the result as `ALERT`, and displayed the three synthetic entries. A separate `lightdm` authentication-failure event also occurred within the window, accounting for the fourth match. This validates the full ALERT path for this lab scenario, not production detection accuracy. See [`evidence/auth-report-alert-sanitized.txt`](evidence/auth-report-alert-sanitized.txt), a manually sanitized transcription of the operator-provided screenshot.
 
+**Test 8 — Journal-read failure and corrected-script regression (November 20, 2026)**
+
+A simulated `journalctl` failure on the earlier script produced `Failures Detected: 0` and `Status: OK`, revealing an incorrect success state. A corrected local script was then tested with mocked journal inputs containing 0, 1, 2, and 3 matching events, plus a failing journal command. The operator-provided screenshot showed all checks passing: syntax, OK, NOTICE (one and two events), ALERT, and ERROR on journal failure. The corrected error-handling logic was committed to `auth-monitor-v2.sh`; the committed version still requires a fresh smoke test against the exact GitHub bytes before final release confirmation. See [`evidence/regression-fixed-2026-11-20.txt`](evidence/regression-fixed-2026-11-20.txt).
+
 **Testing scope:** All testing was performed in an isolated training environment. Detection thresholds are instructional and have not been validated against production security events.
 
 ## Project Files
@@ -94,10 +99,14 @@ Generated three synthetic `authentication failure` messages using `logger` in th
 - `auth-monitor-v2.sh` — Bash monitoring script.
 - `evidence/auth-report-sanitized.txt` — User-reviewed, sanitized NOTICE monitoring report.
 - `evidence/auth-report-alert-sanitized.txt` — Sanitized transcription and test record for the end-to-end ALERT scenario (November 20, 2026).
+- `evidence/regression-test-2026-11-20.txt` — Original four-case regression test record.
+- `evidence/regression-fixed-2026-11-20.txt` — Corrected-script five-case regression plus Bash syntax test; includes provenance limitations.
 
 ## Limitations
 
 - Monitoring runs manually rather than continuously.
+- The repository's corrected script has not yet been rerun in the operator's Kali VM after GitHub commit; recorded six-check regression results came from the locally corrected test copy.
+- Journal-read failure is reported as `ERROR`, but incomplete journal visibility, partial access, and broader error conditions have not been exhaustively tested.
 - Detection relies on a specific authentication failure phrase.
 - The monitoring window is limited to five minutes.
 - Detection thresholds have not been validated against real-world attack patterns.
