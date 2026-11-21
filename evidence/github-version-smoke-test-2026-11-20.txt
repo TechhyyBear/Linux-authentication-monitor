@@ -1,0 +1,36 @@
+Linux Authentication Monitor v2 — Committed GitHub Script Smoke Test
+Recorded lab date: November 20, 2026
+Screenshot scan time: 2026-11-20 21:25:04 EST (as displayed by the Kali VM; clock not independently verified)
+Status: PASS — syntax, script identity, and normal live-journal reporting path
+
+Identity check
+- Repository: https://github.com/TechhyyBear/Linux-authentication-monitor
+- Script: auth-monitor-v2.sh, GitHub main branch.
+- Expected Git blob SHA: 2a7fb184c182255c88e53f8ba29aa4e4ed16f428
+- Operator accessed an existing repository ZIP in the VirtualBox shared folder after reestablishing the mount.
+- The ZIP's auth-monitor-v2.sh entry was checked using git hash-object --stdin and matched the expected SHA.
+- The operator extracted that entry into a separate verification directory, without overwriting previous local script versions.
+- The extracted script was checked using git hash-object; terminal screenshot displayed the same exact SHA.
+- This Git blob hash comparison is evidence that the extracted script bytes matched the GitHub file observed during verification.
+
+Checks visible in the operator-provided terminal screenshot
+- git hash-object auth-monitor-v2.sh: 2a7fb184c182255c88e53f8ba29aa4e4ed16f428
+- bash -n auth-monitor-v2.sh: PASS (the command sequence printed "PASS: Bash syntax")
+- chmod u+x auth-monitor-v2.sh followed by sudo ./auth-monitor-v2.sh: the script ran directly, supporting correct shebang placement and executable invocation.
+- Live output: Scan Time: 2026-11-20 21:25:04 EST
+- Live output: Window: 5 minutes
+- Live output: Failures Detected: 0
+- Live output: Status: OK
+- Live output: EVENT EVIDENCE — No matching events found.
+
+Outcome and precise scope
+PASS — The exact GitHub script was syntax-checked and executed directly in the operator's Kali VM. It successfully returned a normal report for a five-minute window without log entries matching the phrase "authentication failure". This closes the GitHub-bytes smoke-test gap recorded in the prior README.
+
+Limitations
+- Evidence is a transcription of the operator-provided terminal screenshot, not an unredacted terminal capture or independent VM access.
+- The displayed "OK" means no matching entries were found in the queried five-minute journal window, not that there were no other failures, gaps in log visibility, or security incidents.
+- Previous PASS results for NOTICE, ALERT, and mocked journalctl failures are documented in separate lab test records; they were not rerun against the committed GitHub bytes as part of this smoke test.
+- The journalctl-error branch was committed after local corrected-copy regression testing; an error-path regression on the committed bytes remains an optional further validation.
+- Does not establish production detection accuracy, continuous monitoring, comprehensive error handling, or privileged access beyond this script's invocation.
+
+Provenance: User-provided Kali terminal screenshot in the Career and Professional Development conversation, November 20, 2026 (local-context date). The screenshot was reviewed before this record was authored. No identifying journal entries are included.
