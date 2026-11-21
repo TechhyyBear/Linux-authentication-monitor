@@ -61,7 +61,7 @@ Executed the Version 2 classification logic separately with a simulated failure 
 
 **Result:** PASS — The logic correctly returned ALERT.
 
-**Validation limitation:** This test exercised the classification logic independently. The complete Version 2 script has not yet been tested against three matching journal events.
+**Validation at the time:** This test exercised only the classification logic. An end-to-end ALERT test was subsequently completed on November 20, 2026 (Test 7).
 
 **Test 4 — Case-insensitive event counting**
 
@@ -81,12 +81,19 @@ Executed the complete monitoring script and verified the reported failure count,
 
 **Result:** PASS — The script generated the expected monitoring report.
 
+**Test 7 — End-to-end ALERT scenario (Version 2, November 20, 2026)**
+
+Generated three synthetic `authentication failure` messages using `logger` in the isolated Kali lab and ran the complete script against the five-minute journal window.
+
+**Result:** PASS — Script reported `Failures Detected: 4`, classified the result as `ALERT`, and displayed the three synthetic entries. A separate `lightdm` authentication-failure event also occurred within the window, accounting for the fourth match. This validates the full ALERT path for this lab scenario, not production detection accuracy. See [`evidence/auth-report-alert-sanitized.txt`](evidence/auth-report-alert-sanitized.txt), a manually sanitized transcription of the operator-provided screenshot.
+
 **Testing scope:** All testing was performed in an isolated training environment. Detection thresholds are instructional and have not been validated against production security events.
 
 ## Project Files
 
 - `auth-monitor-v2.sh` — Bash monitoring script.
-- `evidence/auth-report-sanitized.txt` — User-reviewed, sanitized monitoring report.
+- `evidence/auth-report-sanitized.txt` — User-reviewed, sanitized NOTICE monitoring report.
+- `evidence/auth-report-alert-sanitized.txt` — Sanitized transcription and test record for the end-to-end ALERT scenario (November 20, 2026).
 
 ## Limitations
 
@@ -94,7 +101,7 @@ Executed the complete monitoring script and verified the reported failure count,
 - Detection relies on a specific authentication failure phrase.
 - The monitoring window is limited to five minutes.
 - Detection thresholds have not been validated against real-world attack patterns.
-- The Version 2 ALERT classification logic passed a standalone test, but the complete script has not been validated against three matching journal events.
+- The end-to-end ALERT lab test observed four matches (three synthetic events plus one separate `lightdm` event); this is a single lab validation, not a repeatability or production-accuracy assessment.
 - The tool does not provide centralized SIEM capabilities.
 
 ## Future Improvements
