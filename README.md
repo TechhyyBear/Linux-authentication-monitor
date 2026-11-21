@@ -90,7 +90,13 @@ Generated three synthetic `authentication failure` messages using `logger` in th
 
 **Test 8 — Journal-read failure and corrected-script regression (November 20, 2026)**
 
-A simulated `journalctl` failure on the earlier script produced `Failures Detected: 0` and `Status: OK`, revealing an incorrect success state. A corrected local script was then tested with mocked journal inputs containing 0, 1, 2, and 3 matching events, plus a failing journal command. The operator-provided screenshot showed all checks passing: syntax, OK, NOTICE (one and two events), ALERT, and ERROR on journal failure. The corrected error-handling logic was committed to `auth-monitor-v2.sh`; the committed version still requires a fresh smoke test against the exact GitHub bytes before final release confirmation. See [`evidence/regression-fixed-2026-11-20.txt`](evidence/regression-fixed-2026-11-20.txt).
+A simulated `journalctl` failure on the earlier script produced `Failures Detected: 0` and `Status: OK`, revealing an incorrect success state. A corrected local script was then tested with mocked journal inputs containing 0, 1, 2, and 3 matching events, plus a failing journal command. The operator-provided screenshot showed all checks passing: syntax, OK, NOTICE (one and two events), ALERT, and ERROR on journal failure. The corrected error-handling logic was committed to `auth-monitor-v2.sh`. Its original six-check regression was run against the corrected local copy; a subsequent smoke test verified and ran the exact committed GitHub script (Test 9). See [`evidence/regression-fixed-2026-11-20.txt`](evidence/regression-fixed-2026-11-20.txt).
+
+**Test 9 — GitHub committed-script identity and Kali smoke test (November 20, 2026)**
+
+The operator read `auth-monitor-v2.sh` from an existing GitHub repository ZIP, verified the entry and extracted script against GitHub blob SHA `2a7fb184c182255c88e53f8ba29aa4e4ed16f428`, then performed Bash syntax validation and executed it directly with `sudo` in Kali.
+
+**Result:** PASS — The terminal screenshot shows the matching hash, `PASS: Bash syntax`, and a successful live-journal report at `2026-11-20 21:25:04 EST`: five-minute window, `Failures Detected: 0`, `Status: OK`, and `No matching events found.` This confirms shebang/direct execution and the normal no-match path on the exact committed script. It does not rerun the mocked failure path against committed bytes. See [`evidence/github-version-smoke-test-2026-11-20.txt`](evidence/github-version-smoke-test-2026-11-20.txt).
 
 **Testing scope:** All testing was performed in an isolated training environment. Detection thresholds are instructional and have not been validated against production security events.
 
@@ -101,11 +107,12 @@ A simulated `journalctl` failure on the earlier script produced `Failures Detect
 - `evidence/auth-report-alert-sanitized.txt` — Sanitized transcription and test record for the end-to-end ALERT scenario (November 20, 2026).
 - `evidence/regression-test-2026-11-20.txt` — Original four-case regression test record.
 - `evidence/regression-fixed-2026-11-20.txt` — Corrected-script five-case regression plus Bash syntax test; includes provenance limitations.
+- `evidence/github-version-smoke-test-2026-11-20.txt` — Screenshot-based record of exact GitHub script hash, Bash syntax, direct execution, and live `OK` result.
 
 ## Limitations
 
 - Monitoring runs manually rather than continuously.
-- The repository's corrected script has not yet been rerun in the operator's Kali VM after GitHub commit; recorded six-check regression results came from the locally corrected test copy.
+- The exact GitHub-committed script passed a syntax check and live-journal zero-event smoke test in Kali. The earlier six-check mocked regression ran on the locally corrected copy; its error-path scenario has not been repeated on the exact committed bytes.
 - Journal-read failure is reported as `ERROR`, but incomplete journal visibility, partial access, and broader error conditions have not been exhaustively tested.
 - Detection relies on a specific authentication failure phrase.
 - The monitoring window is limited to five minutes.
