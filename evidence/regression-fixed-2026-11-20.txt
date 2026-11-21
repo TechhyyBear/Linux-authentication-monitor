@@ -1,0 +1,46 @@
+Linux Authentication Monitor v2 — Corrected Script Regression Test
+Date: November 20, 2026 (operator screenshot timestamp context)
+Result: PASS — six checks displayed as passed
+
+Background
+The original version classified an unsuccessful journalctl read as OK with
+zero authentication failures. A controlled local test demonstrated this
+failure mode. A corrected local copy, auth-monitor-v2-fixed.sh, was then
+created to detect unsuccessful journalctl execution and return a nonzero
+exit status with Status: ERROR and Failures Detected: UNKNOWN.
+
+Observed terminal output (transcribed from operator-provided screenshot):
+PASS: Bash syntax
+PASS: 0 failures -> OK
+PASS: 1 failures -> NOTICE
+PASS: 2 failures -> NOTICE
+PASS: 3 failures -> ALERT
+PASS: Journal failure -> ERROR
+ALL REGRESSION TESTS PASSED
+
+Method
+The operator ran a Bash test harness that temporarily supplied mock
+journalctl output containing 0, 1, 2, or 3 matching authentication-failure
+lines. A separate mock journalctl exited with status 1 to simulate a
+journal-reading failure. The harness checked the script's classification,
+count, successful exit status for normal cases, and nonzero exit status
+for the error case.
+
+Evidence level and limitations
+- Test output was directly visible in a supplied screenshot.
+- The user also separately confirmed expected output for an earlier
+  manual journal-failure test of the corrected copy.
+- The exact local corrected script bytes were not uploaded and compared
+  to the GitHub file; the repository implementation follows the same
+  previously supplied patch. GitHub commit alone is not evidence that
+  the newly committed GitHub bytes have been executed in Kali.
+- The test uses mocked journal input; it does not constitute a new
+  live-journal end-to-end run of the corrected GitHub version.
+- No production deployment, continuous monitoring, or exhaustive
+  error handling/security validation is claimed.
+
+Next checkpoint
+Download or synchronize the committed auth-monitor-v2.sh from GitHub,
+verify its contents or hash, and run syntax, simulated journal failure,
+and normal journal-reading smoke tests against that exact version
+before declaring the repository release finalized.
