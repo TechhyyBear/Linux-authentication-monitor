@@ -1,0 +1,36 @@
+Linux Authentication Monitor v2 — Regression Test Record
+Date: 2026-11-20 (operator-provided screenshot; no independent clock verification)
+Status: PASS — all five displayed checks
+
+Test source:
+User ran a temporary Bash test harness against local ./auth-monitor-v2.sh
+in Kali Linux. The test harness substituted a mock journalctl in PATH,
+with AUTH_MONITOR_TEST_FILE pointing to synthetic event data.
+This was not a new test against the live Linux system journal.
+
+Observed lines (transcribed from the screenshot):
+PASS: Bash syntax
+PASS: 0 failures -> OK
+PASS: 1 failures -> NOTICE
+PASS: 2 failures -> NOTICE
+PASS: 3 failures -> ALERT
+
+What this supports:
+- The tested local script passed bash -n syntax validation.
+- The script classified zero, one, two, and three matching synthetic
+  authentication-failure entries as expected.
+- This complements the previously documented 2026-11-20 end-to-end
+  system journal ALERT scenario (4 matching events, ALERT).
+
+Limitations:
+- The full terminal transcript and test harness file were not uploaded.
+- The exact local script bytes/hash were not compared to GitHub main;
+  test output and local script identity are user-reported and shown in
+  a screenshot, not established through remote attestation.
+- The tests did not exercise journalctl command failures or partial
+  journal access. This remains an open reliability issue.
+- The test does not establish production security-monitoring accuracy.
+
+Source: Operator-provided screenshot in Career and Professional
+Development conversation, November 20, 2026.
+This file is a documentary transcription, not a raw terminal capture.
