@@ -1,0 +1,11 @@
+==================================
+ LINUX AUTHENTICATION MONITOR
+==================================
+Scan Time: 2026-11-15 14:36:08 EST
+Window: 5 minutes
+Failures Detected: 1
+Status: NOTICE
+----------------------------------
+EVENT EVIDENCE
+2026-11-15T14:33:10-0500 [LAB_HOST] sudo[29216]: pam_unix(sudo:auth): authentication failure; logname=[LAB_USER] uid=1000 euid=0 tty=/dev/pts/2 ruser=[LAB_USER] rhost=  user=[LAB_USER]
+==================================
