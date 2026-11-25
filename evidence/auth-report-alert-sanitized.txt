@@ -1,0 +1,32 @@
+==================================
+ LINUX AUTHENTICATION MONITOR
+==================================
+Scan Time: 2026-11-20 19:23:24 EST
+Window: 5 minutes
+Failures Detected: 4
+Status: ALERT
+----------------------------------
+EVENT EVIDENCE (SANITIZED TRANSCRIPTION)
+2026-11-20T19:20:03-0500 [LAB_HOST] lightdm: authentication failure; [identifying log fields redacted]
+2026-11-20T19:22:02-0500 [LAB_HOST] auth-monitor-lab: authentication failure; synthetic lab event 1
+2026-11-20T19:22:03-0500 [LAB_HOST] auth-monitor-lab: authentication failure; synthetic lab event 2
+2026-11-20T19:22:03-0500 [LAB_HOST] auth-monitor-lab: authentication failure; synthetic lab event 3
+==================================
+
+TEST RECORD
+Result: PASS — Full Version 2 script displayed ALERT with four matching
+authentication-failure entries inside the five-minute journal window.
+Three entries were intentionally generated using logger in the isolated
+lab. A separate lightdm authentication-failure event was also present,
+so the observed count was four, not three.
+
+Provenance: Manually sanitized transcription of a screenshot supplied
+by the lab operator on 2026-11-20. It is not a raw journal export.
+Hostnames, usernames, process IDs and nonessential identifying fields
+were removed; timestamps, classification and event origins were kept
+to explain the test. The displayed event lines are condensed and
+should not be presented as exact unredacted journal output.
+
+Scope: Validates this lab scenario and threshold classification.
+It does not establish production detection accuracy, signal quality,
+continuous monitoring, or incident-response capability.
